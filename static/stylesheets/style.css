@@ -1,0 +1,73 @@
+body {
+    background-color: #f3f3d7;
+    align-content: center;
+  }
+
+div {
+    align-content: center;
+}
+
+.home-hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    z-index: -1;
+    background-image: url("/static/images/index-card.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    color: #252525;
+    text-align: center;
+    padding: 1rem;
+  }
+
+
+  .navbar {
+    background-color: #f5eb91;
+    height: 46px;
+    border: 1px solid rgba(133, 133, 133, 0.25);
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    margin-top: 5%;
+    margin-left: 20%;
+    margin-right:20%;
+    position: relative;
+    z-index: 9999;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-brand > img {
+    display: inline-block;
+    margin-bottom: 2px;
+    margin-right: 5px;
+    width: 15%;
+    border-radius: 2px;
+  }
+  
+  .nav > li > a > img {
+    width: 15%;
+  }
+  
+  ul.nav.navbar-nav {
+    align-items: center;
+  }
+  
+  ul.nav.navbar-nav li {
+    margin: 0 0.5rem;
+    display: flex;
+  }
+  
+  nav form.navbar-form {
+    display: flex;
+    position: relative;
+  }

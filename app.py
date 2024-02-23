@@ -1,12 +1,12 @@
 import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g, abort
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 
-from forms import UserAddForm
-from models import db, connect_db
+from forms import UserAddForm, LoginForm
+from models import db, connect_db, User, bcrypt
 
 CURR_USER_KEY = "curr_user"
 
@@ -15,15 +15,17 @@ app = Flask(__name__)
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///warbler'))
+    os.environ.get('DATABASE_URL', 'postgresql:///hanguldex'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
-# toolbar = DebugToolbarExtension(app)
+
+toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
+
 
 
 @app.before_request
@@ -40,7 +42,7 @@ def add_user_to_g():
 def do_login(user):
     """Log in user."""
 
-    session[CURR_USER_KEY] = user.id
+    session[CURR_USER_KEY] = user.username
 
 
 def do_logout():
@@ -60,6 +62,64 @@ def homepage():
 
     else:
         return render_template('home-anon.html')
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    """Handle user login."""
+
+    form = LoginForm()
+
+    if form.validate():
+        user = User.authenticate(form.username.data, form.password.data)
+
+        if user:
+            do_login(user)
+            flash(f"Hello, {user.username}!", "success")
+            return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('users/login.html', form=form)
+
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+    
+    form = UserAddForm()
+
+    if form.validate():
+        try:
+            user = User.signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data,
+                image_url=form.image_url.data or User.image_url.default.arg,
+            )
+            db.session.commit()
+
+        except IntegrityError as e:
+            flash("Username already taken", 'danger')
+            return render_template('users/signup.html', form=form)
+
+        do_login(user)
+
+        return redirect("/")
+
+    else:
+        return render_template('users/signup.html', form=form)
+
+
+@app.route('/logout')
+def logout():
+    """Handle logout of user."""
+
+    do_logout()
+
+    flash("You have successfully logged out.", 'success')
+    return redirect("/login")
     
 
 

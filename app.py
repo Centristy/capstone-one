@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 
-from forms import UserAddForm, LoginForm
+from forms import UserAddForm, LoginForm, UserEditForm
 from models import db, connect_db, User, bcrypt
 
 CURR_USER_KEY = "curr_user"
@@ -70,7 +70,7 @@ def login():
 
     form = LoginForm()
 
-    if form.validate():
+    if form.validate_on_submit():
         user = User.authenticate(form.username.data, form.password.data)
 
         if user:
@@ -90,7 +90,7 @@ def signup():
     
     form = UserAddForm()
 
-    if form.validate():
+    if form.validate_on_submit():
         try:
             user = User.signup(
                 username=form.username.data,
@@ -110,6 +110,29 @@ def signup():
 
     else:
         return render_template('users/signup.html', form=form)
+    
+
+@app.route('/edit', methods=["GET", "POST"])
+def edit_profile():
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.email = form.email.data
+            user.image_url = form.image_url.data or "/static/images/default-pic.png"
+            db.session.commit()
+            return redirect(f"/")
+
+        flash("Wrong password, please try again.", 'danger')
+
+    return render_template('users/edit.html', form=form, user_username=user.username)
 
 
 @app.route('/logout')

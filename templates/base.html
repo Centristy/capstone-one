@@ -11,10 +11,12 @@
   <script src="https://unpkg.com/popper"></script>
   <script src="https://unpkg.com/bootstrap"></script>
 
-  <link rel="stylesheet"
-        href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"> 
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/stylesheets/style.css">
   <link rel="shortcut icon" href="/static/favicon.ico">
+
+
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
@@ -33,7 +35,7 @@
       
       <li><a href="/login">Log in</a></li>
       {% else %}
-      <li><a href="/logout">  Log out</a></li>
+      <li><a href="/logout">Log out</a></li>
       {% endif %}
     </ul>
   </div>
@@ -46,6 +48,9 @@
   {% block content %}
   {% endblock %}
 
+
+
 </div>
 </body>
+
 </html>

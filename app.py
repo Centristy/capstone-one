@@ -5,8 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 
-from forms import UserAddForm, LoginForm, UserEditForm
-from models import db, connect_db, User, bcrypt
+from forms import UserAddForm, LoginForm, UserEditForm, DeckAddForm, CardAddForm
+from models import db, connect_db, User, Deck, bcrypt
 
 CURR_USER_KEY = "curr_user"
 
@@ -39,10 +39,12 @@ def add_user_to_g():
         g.user = None
 
 
+
 def do_login(user):
     """Log in user."""
 
-    session[CURR_USER_KEY] = user.username
+    session[CURR_USER_KEY] = user.id
+
 
 
 def do_logout():
@@ -55,10 +57,13 @@ def do_logout():
 @app.route('/')
 def homepage():
     """Show homepage:"""
+    
 
+    decks = (Deck.query.all())
+    
     if g.user:
 
-        return render_template('home.html')
+        return render_template('home.html', decks=decks)
 
     else:
         return render_template('home-anon.html')
@@ -83,7 +88,7 @@ def login():
     return render_template('users/login.html', form=form)
 
 @app.route('/signup', methods=["GET", "POST"])
-def signup():
+def  signup():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
@@ -127,12 +132,53 @@ def edit_profile():
         if User.authenticate(user.username, form.password.data):
             user.email = form.email.data
             user.image_url = form.image_url.data or "/static/images/default-pic.png"
+            user.header_image_url = form.header_image_url.data or User.image_url.default.arg,
             db.session.commit()
             return redirect(f"/")
 
         flash("Wrong password, please try again.", 'danger')
 
-    return render_template('users/edit.html', form=form, user_username=user.username)
+    return render_template('users/edit.html', form=form, user_id=user.id)
+
+
+##############################################################################
+# Deck routes:
+
+
+@app.route('/new', methods=["GET", "POST"])
+def createdeck():
+
+    """Create a New Deck"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = DeckAddForm()
+
+    id = g.user.id
+
+    print(id, "This is the id")
+
+    if form.validate_on_submit():
+            deck = Deck(
+                title=form.title.data,
+                cover_img=form.cover_img.data or Deck.cover_img.default.arg,
+                user_id  = id
+            )
+
+            g.user.decks.append(deck)
+            db.session.commit()
+
+            flash("Deck Created!", 'success')
+
+            return redirect(f"/")
+    
+    flash("Deck Title Already Exists", 'danger')
+
+    return render_template('decks/newdeck.html', form=form)
+
+
+
 
 
 @app.route('/logout')

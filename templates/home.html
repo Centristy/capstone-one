@@ -1,26 +1,58 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="row">
+    
 
+<div class="row justify-content-center" id="text-over-icon">
 
-<div class="row">
-
-    <aside class="col-md-4 col-lg-3 col-sm-12" id="home-aside">
-        <div class="card user-card">
-
-                <img src="{{ g.user.image_url }}"
-                    alt="Image for {{ g.user.username }}"
-                    class="card-image">
-                    <a href="/edit">
-                        <button type="button" class="float-right">
-                            Edit Profile &#9999;
-                        </button>
-                    </a>
-                    <h2 class = "m-3">{{ g.user.username }}</h2>
-        </div>
-    </aside>
+    <div class="col-3 col-lg-2" id="home-aside" >
+        <div class="card user-card ml-5" style="background-color:transparent; border-color:rgb(199, 199, 127)">
+            <a href="/edit" >
+                <button id = "bttnimg" type="button">
+                    <i class="fa fa-pencil" style="color:blue" title="Edit Profile"></i>
+                </button>
+            </a>
+            <img class="card-image rounded-circle p-2 m-2" style="height:15vh; width:15vh;" src="{{ g.user.image_url }}"
+                    alt="Image for {{ g.user.username }}">
+                    <p class="p-2" style="font-size: 3vh;">  {{ g.user.username }}</p>
+        </div>     
+        
+    </div>
+    
+    <div class="col-9 col-lg-10"><img style="height: 25vh; width: 82%;" class="col-xs-0 col-sm-8 col-md-8 col-lg-10" src="{{ g.user.header_image_url }}" alt="" class="rounded"></div>
 
 </div>
 
+
+<div class="row mx-5 p-5">
+
+    {% for deck in decks %}
+    <div class="card user-card shadow col-md-3 col-lg-2 col-sm-10">
+
+        <img src="{{ deck.cover_img }}"
+            class="card-image pt-3">
+            <a href="/editdeck/{{deck.id}}">
+                <button id = "bttnimg" type="button">
+                    <i class="fa fa-pencil" style="color:blue" title="Edit Deck"></i>
+                </button>
+            </a>
+            <p>{{ deck.title }}</p>
+    </div>
+
+    {% endfor %}
+
+
+</div>       
+
+
+<hr>
+
+<!-- Trigger/Open The Modal -->
+<a href="/new">
+    <button class="btn btn-primary btn-lg btn-block">Create New Deck!</button>
+</a>
+
+
+
 {% endblock %}
+

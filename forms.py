@@ -19,7 +19,7 @@ class LoginForm(FlaskForm):
 
 class UserEditForm(FlaskForm):
     """Form for editing users."""
-
+    username = StringField('Username')
     email = StringField('E-mail', validators=[Email()])
     image_url = StringField('(Optional) Image URL')
     header_image_url = StringField('(Optional) Profile Image URL')
@@ -34,4 +34,4 @@ class CardAddForm(FlaskForm):
     """Form for adding a Card to a Deck."""
     english = StringField('English', validators=[DataRequired()])
     korean = StringField('Korean', validators=[DataRequired()])
-    image_url = StringField('(Optional) Profile Image URL')
+    image_url = StringField('(Optional) Card Image URL')

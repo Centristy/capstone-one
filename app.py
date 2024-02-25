@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 
 from forms import UserAddForm, LoginForm, UserEditForm, DeckAddForm, CardAddForm
-from models import db, connect_db, User, Deck, bcrypt
+from models import db, connect_db, User, Deck, Card, bcrypt
 
 CURR_USER_KEY = "curr_user"
 
@@ -59,11 +59,11 @@ def homepage():
     """Show homepage:"""
 
     decks = (Deck.query.all())
-    
+    form = DeckAddForm()
+
     if g.user:
 
         """Create a New Deck"""
-        form = DeckAddForm()
 
         id = g.user.id
 
@@ -85,7 +85,7 @@ def homepage():
 
     else:
         
-        return render_template('home-anon.html')
+        return render_template('home-anon.html', form=form)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -105,6 +105,8 @@ def login():
         flash("Invalid credentials.", 'danger')
 
     return render_template('users/login.html', form=form)
+
+
 
 @app.route('/signup', methods=["GET", "POST"])
 def  signup():
@@ -136,6 +138,52 @@ def  signup():
         return render_template('users/signup.html', form=form)
     
 
+@app.route('/edit', methods=["GET", "POST"])
+def edit_profile():
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data or User.image_url.default.arg,
+            user.header_image_url = form.header_image_url.data or User.header_image_url.default.arg,
+
+            db.session.commit()
+            return redirect(f"/")
+
+        flash("Wrong password, please try again.", 'danger')
+
+    return render_template('users/edit.html', form=form, user_id=user.id)
+
+
+@app.route('/delete', methods=["GET", "POST"])
+def delete_user():
+    """Delete user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+
+    Card.query.filter(Card.user_id == g.user.id).delete()
+    Deck.query.filter(Deck.user_id == g.user.id).delete()
+
+
+
+    db.session.delete(g.user)
+    db.session.commit()
+
+    flash("Account Successfully Deleted", "success")
+
+    return redirect("/signup")
 
 ##############################################################################
 # Deck routes:
@@ -147,9 +195,58 @@ def edit_deck(deck_id):
     """Show a message."""
 
     form = CardAddForm()
-
     deck = Deck.query.get_or_404(deck_id)
-    return render_template('decks/editdeck.html', deck = deck, form = form)
+    cards = (Card
+            .query
+            .filter(Card.deck_id == deck.id)
+            .all())
+    
+    if form.validate_on_submit():
+        
+        card = Card.add(
+                english=form.english.data,
+                korean=form.korean.data,
+                image_url=form.image_url.data or Card.image_url.default.arg,
+                deck_id = deck_id,
+                user_id = g.user.id
+            )
+        
+        db.session.add(card)
+
+        db.session.commit()
+
+        flash("Card Added", 'success')
+
+        return redirect(f'/decks/edit/{deck_id}')
+    
+    else:
+
+        return render_template('decks/editdeck.html', deck=deck, form=form, cards=cards)
+
+@app.route('/decks/delete/<int:deck_id>', methods=["GET", "POST"])
+def delete_deck(deck_id):
+    """Show a message."""
+
+
+    Card.query.filter(Card.deck_id == deck_id).delete()
+    Deck.query.filter(Deck.id == deck_id).delete()
+
+    db.session.commit()
+        
+    return redirect(f'/')
+
+@app.route('/decks/delete/card/<int:card_id>', methods=["GET", "POST"])
+def delete_card(card_id):
+    """Show a message."""
+
+
+    card = Card.query.get_or_404(card_id)
+    deck_id = card.deck_id
+    db.session.delete(card)
+    db.session.commit()
+        
+    return redirect(f'/decks/edit/{deck_id}')
+    
 
 
 

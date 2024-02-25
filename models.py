@@ -44,7 +44,9 @@ class User(db.Model):
         default="/static/images/default-header.jpg"
     )
 
+
     decks = db.relationship('Deck')
+    cards = db.relationship('Card')
 
 
     @classmethod
@@ -110,6 +112,63 @@ class Deck(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
+
+    cards = db.relationship('Card')
+
+
+
+
+class Card(db.Model):
+
+    __tablename__ = 'cards'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    english = db.Column(
+        db.Text,
+        nullable=False,
+    )
+
+    korean = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    image_url = db.Column(
+        db.Text,
+        default="/static/images/default-card.png",
+    )
+
+    deck_id = db.Column(
+        db.Integer,
+        db.ForeignKey('decks.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    @classmethod
+    def add(cls, english, korean, image_url, deck_id, user_id):
+        """Add a New Card """
+
+        card = Card(
+
+            english=english,
+            korean=korean,
+            image_url=image_url,
+            deck_id=deck_id,
+            user_id = user_id
+
+        )
+        return card
+
 
 
 

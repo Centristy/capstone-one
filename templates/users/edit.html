@@ -28,11 +28,22 @@
         {{ form.password(placeholder="Enter your password to confirm changes", class="form-control") }}
 
         <div class="edit-btn-area">
-          <button class="btn btn-success">Edit this user!</button>
+          <button class="btn btn-success">Update Information</button>
           <a href="/" class="btn btn-outline-secondary">Cancel</a>
         </div>
       </form>
     </div>
+  </div>
+
+  <hr>
+
+  <div class="row justify-content-md-center">
+  
+  <form>
+    <a href="/delete" class="btn btn-outline-danger">Delete Account</a>
+  </form>
+    
+  
   </div>
 
 {% endblock %}

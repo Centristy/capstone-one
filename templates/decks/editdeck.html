@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
+<h1 class="row justify-content-center"> Current Flash Cards</h1>
+
+
+
+
+<hr>
+
+<h2 class="row justify-content-center"> Add a New Flash Card</h2>
+
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form method="POST">
@@ -17,7 +27,7 @@
             {% endfor %}
 
         </div>
-        <button class="btn btn-outline-success btn-block">Create New Deck!!</button>
+        <button class="btn btn-outline-success btn-block">Add Card</button>
         </form>
     </div>
 </div>

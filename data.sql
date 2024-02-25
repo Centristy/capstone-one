@@ -22,3 +22,22 @@ CREATE TABLE decks
     cover_img TEXT,
     user_id INTEGER NOT NULL REFERENCES users(id)
 );
+
+
+DROP TABLE IF EXISTS cards;
+CREATE TABLE cards
+(
+    id SERIAL PRIMARY KEY,
+    english TEXT NOT NULL,
+    Korean TEXT NOT NULL,
+    deck_id INTEGER NOT NULL REFERENCES decks(id)
+);
+
+DROP TABLE IF EXISTS deck_cards;
+CREATE TABLE deck_cards
+(
+    id SERIAL PRIMARY KEY,
+    deck_id INTEGER NOT NULL REFERENCES decks(id)
+    card_id INTEGER NOT NULL REFERENCES cards(id)
+);
+

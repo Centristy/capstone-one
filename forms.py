@@ -33,5 +33,5 @@ class DeckAddForm(FlaskForm):
 class CardAddForm(FlaskForm):
     """Form for adding a Card to a Deck."""
     english = StringField('English', validators=[DataRequired()])
-    Korea = StringField('English', validators=[DataRequired()])
+    korean = StringField('Korean', validators=[DataRequired()])
     image_url = StringField('(Optional) Profile Image URL')

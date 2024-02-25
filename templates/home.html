@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    
 
 <div class="row justify-content-center" id="text-over-icon">
 
@@ -27,11 +26,11 @@
 <div class="row mx-5 p-5">
 
     {% for deck in decks %}
-    <div class="card user-card shadow col-md-3 col-lg-2 col-sm-10">
+    <div class="card user-card shadow col-md-4 col-lg-3 col-xl-2 col-sm-10 border border-0 bg-transparent" >
 
         <img src="{{ deck.cover_img }}"
-            class="card-image pt-3">
-            <a href="/editdeck/{{deck.id}}">
+            class="card-image pt-3" height="150vw" width= "150vw">
+            <a href="/decks/edit/{{deck.id}}">
                 <button id = "bttnimg" type="button">
                     <i class="fa fa-pencil" style="color:blue" title="Edit Deck"></i>
                 </button>
@@ -39,18 +38,12 @@
             <p>{{ deck.title }}</p>
     </div>
 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
     {% endfor %}
 
 
 </div>       
-
-
-<hr>
-
-<!-- Trigger/Open The Modal -->
-<a href="/new">
-    <button class="btn btn-primary btn-lg btn-block">Create New Deck!</button>
-</a>
 
 
 

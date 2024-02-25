@@ -54,18 +54,37 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def homepage():
     """Show homepage:"""
-    
 
     decks = (Deck.query.all())
     
     if g.user:
 
-        return render_template('home.html', decks=decks)
+        """Create a New Deck"""
+        form = DeckAddForm()
+
+        id = g.user.id
+
+        if form.validate_on_submit():
+            deck = Deck(
+                title=form.title.data,
+                cover_img=form.cover_img.data or Deck.cover_img.default.arg,
+                user_id  = id
+            )
+
+            g.user.decks.append(deck)
+            db.session.commit()
+
+            flash("Deck Created!", 'success')
+
+            return redirect(f"/decks/edit/{deck.id}")
+
+        return render_template('home.html', decks=decks, form=form)
 
     else:
+        
         return render_template('home-anon.html')
 
 
@@ -117,67 +136,20 @@ def  signup():
         return render_template('users/signup.html', form=form)
     
 
-@app.route('/edit', methods=["GET", "POST"])
-def edit_profile():
-    """Update profile for current user."""
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    user = g.user
-    form = UserEditForm(obj=user)
-
-    if form.validate_on_submit():
-        if User.authenticate(user.username, form.password.data):
-            user.email = form.email.data
-            user.image_url = form.image_url.data or "/static/images/default-pic.png"
-            user.header_image_url = form.header_image_url.data or User.image_url.default.arg,
-            db.session.commit()
-            return redirect(f"/")
-
-        flash("Wrong password, please try again.", 'danger')
-
-    return render_template('users/edit.html', form=form, user_id=user.id)
-
 
 ##############################################################################
 # Deck routes:
 
 
-@app.route('/new', methods=["GET", "POST"])
-def createdeck():
 
-    """Create a New Deck"""
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
+@app.route('/decks/edit/<int:deck_id>', methods=["GET", "POST"])
+def edit_deck(deck_id):
+    """Show a message."""
 
-    form = DeckAddForm()
+    form = CardAddForm()
 
-    id = g.user.id
-
-    print(id, "This is the id")
-
-    if form.validate_on_submit():
-            deck = Deck(
-                title=form.title.data,
-                cover_img=form.cover_img.data or Deck.cover_img.default.arg,
-                user_id  = id
-            )
-
-            g.user.decks.append(deck)
-            db.session.commit()
-
-            flash("Deck Created!", 'success')
-
-            return redirect(f"/")
-    
-    flash("Deck Title Already Exists", 'danger')
-
-    return render_template('decks/newdeck.html', form=form)
-
-
+    deck = Deck.query.get_or_404(deck_id)
+    return render_template('decks/editdeck.html', deck = deck, form = form)
 
 
 

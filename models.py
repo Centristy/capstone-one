@@ -104,7 +104,7 @@ class Deck(db.Model):
 
     cover_img = db.Column(
         db.Text,
-        default="/static/images/deck-cover.jpg",
+        default="/static/images/deck-cover.JPG",
     )
 
     user_id = db.Column(

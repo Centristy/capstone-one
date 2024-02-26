@@ -21,8 +21,8 @@ class UserEditForm(FlaskForm):
     """Form for editing users."""
     username = StringField('Username')
     email = StringField('E-mail', validators=[Email()])
-    image_url = StringField('(Optional) Image URL')
-    header_image_url = StringField('(Optional) Profile Image URL')
+    image_url = StringField('(Optional) Profile Image URL')
+    header_image_url = StringField('(Optional) Header Image URL')
     password = PasswordField('Password', validators=[Length(min=6)])
 
 class DeckAddForm(FlaskForm):

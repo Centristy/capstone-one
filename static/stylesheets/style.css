@@ -36,6 +36,25 @@ div {
     text-align: center;
     padding: 1rem;
   }
+  .home-hero-video {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 300px;
+    width: 100vw;
+    left: 0;
+    z-index: -1;
+    background-image: url("/static/images/index-card.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    color: #252525;
+    text-align: center;
+    padding: 1rem;
+  }
 
 
   .navbar {
@@ -47,6 +66,7 @@ div {
     margin-top: 5%;
     margin-left: 20%;
     margin-right:20%;
+    padding: 10px;
     position: relative;
     z-index: 9999;
   }
@@ -93,6 +113,7 @@ div {
     background-color: transparent;
     border-color:transparent;
 }
+
 
 #bttnimgleft{
   float: left;

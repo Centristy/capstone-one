@@ -20,10 +20,12 @@ You can see the API MyMemory documentation [here](https://mymemory.translated.ne
 
 ![Blue showing](https://i.ibb.co/KXmYTTL/after.jpg)
 
+2. The Korean takes a few seconds to generate.
+
 
 
 ## Deploy
 
-Please check out the webpage below
+Please check out the web page below
 
 [Here] (https://capstone-one-hanguldex.onrender.com)

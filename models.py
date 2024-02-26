@@ -88,6 +88,9 @@ class User(db.Model):
                 return user
 
         return False
+    
+    def __repr__(self):
+        return f"<User #{self.id}: {self.username}, {self.email}>"
 
 
 class Deck(db.Model):

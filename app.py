@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-os.environ.get('DATABASE_URL', 'postgresql:///hanguldex'))
+    os.environ.get('DATABASE_URL', 'postgresql://lxnlfsgl:DhnezlWAyCJtXdWx_ONUofUAscfeKF_n@stampy.db.elephantsql.com/lxnlfsgl'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -65,7 +65,6 @@ def do_logout():
 def homepage():
     """Show homepage:"""
 
-    decks = (Deck.query.filter(Deck.user_id == g.user.id).all())
 
     form = DeckAddForm()
 
@@ -74,6 +73,7 @@ def homepage():
         """Create a New Deck"""
 
         id = g.user.id
+        decks = (Deck.query.filter(Deck.user_id == id).all())
 
         if form.validate_on_submit():
             deck = Deck(
@@ -141,7 +141,7 @@ def  signup():
             db.session.commit()
 
         except IntegrityError as e:
-            flash("Username already taken", 'danger')
+            flash("Error with Sign Up", 'danger')
             return render_template('users/signup.html', form=form)
 
         do_login(user)

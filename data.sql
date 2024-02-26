@@ -1,3 +1,5 @@
+
+DROP DATABASE IF EXISTS hanguldex;
 CREATE DATABASE hanguldex;
 
 \c hanguldex
@@ -5,7 +7,7 @@ CREATE DATABASE hanguldex;
 
 CREATE TABLE users
 (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
@@ -16,19 +18,19 @@ CREATE TABLE users
 
 CREATE TABLE decks
 (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     cover_img TEXT,
-    user_id INTEGER NOT NULL REFERENCES users(id)
+    user_id INT NOT NULL REFERENCES users(id)
 );
 
 
 CREATE TABLE cards
 (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     english TEXT NOT NULL,
     korean TEXT NOT NULL,
     image_url TEXT NOT NULL,
-    deck_id INTEGER NOT NULL REFERENCES decks(id),
-    user_id INTEGER NOT NULL REFERENCES users(id)
+    deck_id INT NOT NULL REFERENCES decks(id),
+    user_id INT NOT NULL REFERENCES users(id)
 );

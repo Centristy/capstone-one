@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-os.environ.get('DATABASE_URL', 'postgresql://oefxxyoo:GygC5wo5vUgZLjKCXMQJMzF4hXzOZFSS@stampy.db.elephantsql.com/oefxxyoo'))
+os.environ.get('DATABASE_URL', 'postgresql:///hanguldex'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -65,7 +65,8 @@ def do_logout():
 def homepage():
     """Show homepage:"""
 
-    decks = (Deck.query.all())
+    decks = (Deck.query.filter(Deck.user_id == g.user.id).all())
+
     form = DeckAddForm()
 
     if g.user:
@@ -135,6 +136,7 @@ def  signup():
                 password=form.password.data,
                 email=form.email.data,
                 image_url=form.image_url.data or User.image_url.default.arg,
+                header_image_url = User.header_image_url.default.arg
             )
             db.session.commit()
 

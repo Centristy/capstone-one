@@ -8,7 +8,7 @@
     {% for card in cards %}
 
 
-    <div class="card user-card shadow border bg-warning flashcards">
+    <div class="card user-card shadow border bg-warning flashcards" style="background-image: url({{card.image_url}})" >
 
         <p class="english">{{ card.english }}</p>
         <p class="korean" style="display: none;">{{ card.korean }}</p>

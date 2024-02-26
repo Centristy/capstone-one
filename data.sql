@@ -1,4 +1,3 @@
-DROP DATABASE hanguldex;
 CREATE DATABASE hanguldex;
 
 \c hanguldex

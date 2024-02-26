@@ -22,3 +22,8 @@ You can see the API MyMemory documentation [here](https://mymemory.translated.ne
 
 
 
+## Deploy
+
+Please check out the webpage below
+
+[Here] (https://capstone-one-hanguldex.onrender.com)

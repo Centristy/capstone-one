@@ -58,6 +58,9 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
+# Landing Page has all the flash card decks and includes a modal to create a new deck
+
+
 @app.route('/', methods=["GET", "POST"])
 def homepage():
     """Show homepage:"""
@@ -90,6 +93,9 @@ def homepage():
     else:
         
         return render_template('home-anon.html', form=form)
+    
+
+#Login form with bycrpt authentication
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -110,6 +116,8 @@ def login():
 
     return render_template('users/login.html', form=form)
 
+
+#Signup form with unique usernames
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -142,6 +150,9 @@ def  signup():
         return render_template('users/signup.html', form=form)
     
 
+#Allows users to edit profile information, profile pic and header image
+    
+
 @app.route('/edit', methods=["GET", "POST"])
 def edit_profile():
     """Update profile for current user."""
@@ -168,6 +179,8 @@ def edit_profile():
     return render_template('users/edit.html', form=form, user_id=user.id)
 
 
+#Deletes users along with all cards and decks associated with user
+
 @app.route('/delete', methods=["GET", "POST"])
 def delete_user():
     """Delete user."""
@@ -189,14 +202,25 @@ def delete_user():
 
     return redirect("/signup")
 
+
+@app.route('/logout')
+def logout():
+    """Handle logout of user."""
+
+    do_logout()
+
+    flash("You have successfully logged out.", 'success')
+    return redirect("/login")
+    
+
 ##############################################################################
 # Deck routes:
 
-
+#Allows users to edit a deck
 
 @app.route('/decks/edit/<int:deck_id>', methods=["GET", "POST"])
 def edit_deck(deck_id):
-    """Show a message."""
+    
 
     form = CardAddForm()
     deck = Deck.query.get_or_404(deck_id)
@@ -226,10 +250,13 @@ def edit_deck(deck_id):
     else:
 
         return render_template('decks/editdeck.html', deck=deck, form=form, cards=cards)
+    
+
+#Allows user to delete a deck
 
 @app.route('/decks/delete/<int:deck_id>', methods=["GET", "POST"])
 def delete_deck(deck_id):
-    """Show a message."""
+    
 
 
     Card.query.filter(Card.deck_id == deck_id).delete()
@@ -239,9 +266,11 @@ def delete_deck(deck_id):
         
     return redirect(f'/')
 
+#Allows user to delete a specific card
+
 @app.route('/decks/delete/card/<int:card_id>', methods=["GET", "POST"])
 def delete_card(card_id):
-    """Show a message."""
+
 
 
     card = Card.query.get_or_404(card_id)
@@ -251,21 +280,6 @@ def delete_card(card_id):
         
     return redirect(f'/decks/edit/{deck_id}')
     
-
-
-
-@app.route('/logout')
-def logout():
-    """Handle logout of user."""
-
-    do_logout()
-
-    flash("You have successfully logged out.", 'success')
-    return redirect("/login")
-    
-
-
-
 
 
 

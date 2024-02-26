@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
+from translate import Translator
 
 from forms import UserAddForm, LoginForm, UserEditForm, DeckAddForm, CardAddForm
 from models import db, connect_db, User, Deck, Card, bcrypt
@@ -23,6 +24,9 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 
 toolbar = DebugToolbarExtension(app)
+
+translator = Translator(provider='libre', from_lang='en', to_lang='kr')
+
 
 connect_db(app)
 

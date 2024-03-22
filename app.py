@@ -259,7 +259,15 @@ def edit_deck(deck_id):
 @app.route('/decks/delete/<int:deck_id>', methods=["GET", "POST"])
 def delete_deck(deck_id):
     
+    """
+    Delete a deck and its associated cards from the database.
 
+    Parameters:
+        deck_id (int): The ID of the deck to delete.
+
+    Returns:
+        Flask redirect: Redirects to the home page after deletion.
+    """
 
     Card.query.filter(Card.deck_id == deck_id).delete()
     Deck.query.filter(Deck.id == deck_id).delete()
@@ -273,7 +281,15 @@ def delete_deck(deck_id):
 @app.route('/decks/delete/card/<int:card_id>', methods=["GET", "POST"])
 def delete_card(card_id):
 
+    """
+    Delete a specific card from the database.
 
+    Parameters:
+        card_id (int): The ID of the card to delete.
+
+    Returns:
+        Some response: Response after deletion.
+    """
 
     card = Card.query.get_or_404(card_id)
     deck_id = card.deck_id

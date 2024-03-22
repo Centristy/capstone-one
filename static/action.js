@@ -18,7 +18,11 @@ $(document).ready(function() {
 
             $('input[name="korean"]')[1].value = data.responseData.translatedText;
         })
-
+      
+        .catch(error => {
+            console.error('Error fetching translation', error);
+            // Handle the error, e.g., display a message to the user
+        });
 
         })
     

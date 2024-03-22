@@ -11,7 +11,7 @@ $(document).ready(function() {
 
     $('input[name="korean"]').click(function(){
 
-        text = $('input[name="english"]')[1].value
+        text = $('input[name="english"]')[1].value.toLowerCase() // searches are more accurate in lowercase
         
         let apiUrl = `https://api.mymemory.translated.net/get?q=${text}!&langpair=en|ko`
         fetch(apiUrl).then(res => res.json()).then(data=> {
